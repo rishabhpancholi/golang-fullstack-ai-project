@@ -25,9 +25,9 @@ func Load() (*Config, error) {
 		port = "3000"
 	}
 
-	dbURL := os.Getenv("MONGO_DB_URI")
+	dbURL := os.Getenv("NEON_DB_URI")
 	if dbURL == "" {
-		return nil, fmt.Errorf("MONGO_DB_URI is required but not set")
+		return nil, fmt.Errorf("NEON_DB_URI is required but not set")
 	}
 
 	config := &Config{

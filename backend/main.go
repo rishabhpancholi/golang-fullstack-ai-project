@@ -20,7 +20,7 @@ func main() {
 		log.Fatalf("Error loading config: %v", err.Error())
 	}
 
-	client, err := db.Connect(cfg.DataBaseURL)
+	pool, err := db.Connect(cfg.DataBaseURL)
 	if err != nil {
 		log.Fatalf("Error connecting to database: %v", err.Error())
 	}
@@ -54,11 +54,9 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	log.Println("Disconnecting from mongo client...")
+	log.Println("Closing database connection...")
 
-	if err = client.Disconnect(ctx); err != nil {
-		log.Fatalf("Error while disconnecting from mongo client: %v", err.Error())
-	}
+	pool.Close()
 
 	log.Println("Shutting down server...")
 
