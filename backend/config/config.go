@@ -10,8 +10,10 @@ import (
 
 // Configuration struct for the backend
 type Config struct {
-	Port        string
-	DataBaseURL string
+	Port          string
+	DataBaseURL   string
+	CloudinaryURL string
+	JWTSecret     string
 }
 
 // Loads the backend configuration
@@ -30,9 +32,21 @@ func Load() (*Config, error) {
 		return nil, fmt.Errorf("NEON_DB_URI is required but not set")
 	}
 
+	cloudinaryURL := os.Getenv("CLOUDINARY_URL")
+	if cloudinaryURL == "" {
+		return nil, fmt.Errorf("CLOUDINARY_URL is required but not set")
+	}
+
+	jwtSecret := os.Getenv("JWT_SECRET_KEY")
+	if jwtSecret == "" {
+		return nil, fmt.Errorf("JWT_SECRET_KEY is required but not set")
+	}
+
 	config := &Config{
-		Port:        port,
-		DataBaseURL: dbURL,
+		Port:          port,
+		DataBaseURL:   dbURL,
+		CloudinaryURL: cloudinaryURL,
+		JWTSecret:     jwtSecret,
 	}
 
 	return config, nil

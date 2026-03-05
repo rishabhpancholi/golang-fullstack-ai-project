@@ -8,6 +8,8 @@ import (
 	"os/signal"
 	"project/config"
 	db "project/database"
+	"project/routes"
+	utilities "project/utils"
 	"syscall"
 	"time"
 
@@ -25,15 +27,20 @@ func main() {
 		log.Fatalf("Error connecting to database: %v", err.Error())
 	}
 
+	cld, err := utilities.CloudinarySetup(cfg.CloudinaryURL)
+	if err != nil {
+		log.Fatalf("Error setting up cloudinary: %v", err.Error())
+	}
+
 	gin.SetMode(gin.ReleaseMode)
 
 	app := gin.Default()
 
+	app.MaxMultipartMemory = 10 << 20
+
 	app.SetTrustedProxies(nil)
 
-	app.GET("/", func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "Welcome to the server!")
-	})
+	routes.RegisterAuthRoutes(app, pool, cld, &cfg.JWTSecret)
 
 	srv := &http.Server{
 		Addr:    ":" + cfg.Port,
