@@ -1,7 +1,9 @@
 -- Write your migrate up statements here
 
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
+    user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -13,6 +15,7 @@ CREATE TABLE users (
     profile_pic VARCHAR(255),
     profile_pic_public_id VARCHAR(255),
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     subscription TIMESTAMPTZ
 );
 

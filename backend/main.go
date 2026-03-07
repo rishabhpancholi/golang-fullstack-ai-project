@@ -34,17 +34,24 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode)
 
-	app := gin.Default()
+	handler := gin.Default()
 
-	app.MaxMultipartMemory = 10 << 20
+	handler.MaxMultipartMemory = 10 << 20
 
-	app.SetTrustedProxies(nil)
+	handler.SetTrustedProxies(nil)
 
-	routes.RegisterAuthRoutes(app, pool, cld, &cfg.JWTSecret)
+	app := &config.App{
+		Handler:      handler,
+		Pool:         pool,
+		Cld:          cld,
+		JWTSecretKey: cfg.JWTSecret,
+	}
+
+	routes.RegisterAuthRoutes(app)
 
 	srv := &http.Server{
 		Addr:    ":" + cfg.Port,
-		Handler: app,
+		Handler: handler,
 	}
 
 	go func() {

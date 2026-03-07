@@ -5,6 +5,9 @@ import (
 	"log"
 	"os"
 
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
 
@@ -14,6 +17,13 @@ type Config struct {
 	DataBaseURL   string
 	CloudinaryURL string
 	JWTSecret     string
+}
+
+type App struct {
+	Handler      *gin.Engine
+	Pool         *pgxpool.Pool
+	Cld          *cloudinary.Cloudinary
+	JWTSecretKey string
 }
 
 // Loads the backend configuration
